@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  name     String?
+  role     Role    @default(USER)
+  password String
+}
+
+model Ramal {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  published Boolean  @default(true)
+  nome      String
+  funcao    String
+  numero    String
+  cardId    Int
+  card      Card?    @relation(fields: [cardId], references: [id])
+}
+
+model Card {
+  id       Int     @id @default(autoincrement())
+  setor    String
+  subtitle String
+  mensagem String
+  unidade  String
+  published Boolean @default(true)
+  ramais   Ramal[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
