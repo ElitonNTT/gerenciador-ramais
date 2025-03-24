@@ -11,7 +11,7 @@ export const TCard_Ramal = z.object({
   setor: z.string(),
   subtitle: z.string(),
   mensagem: z.string(),
-  published: z.boolean().optional(),
+  published: z.boolean(),
   unidade: z.string(),
   ramais: z.array(
     z.object({
@@ -22,4 +22,13 @@ export const TCard_Ramal = z.object({
       numero: z.string().min(4, { message: "Número inválido!" }),
     })
   ),
+});
+
+export const TRamal = z.object({
+  id: z.number().optional(),
+  cardID: z.number(),
+  nome: z.string().min(1, "Nome é obrigatório"),
+  funcao: z.string().min(1, "Função é obrigatória"),
+  numero: z.string().min(1, "Número é obrigatório"),
+  published: z.boolean(),
 });

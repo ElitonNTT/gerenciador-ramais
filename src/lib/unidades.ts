@@ -1,9 +1,9 @@
 export const Unidades = [
-  { unidade: "SEDE" },
-  { unidade: "UPM" },
-  { unidade: "UJS" },
-  { unidade: "USD" },
-  { unidade: "SOU" },
-  { unidade: "UNC" },
-  { unidade: "UNE" },
+  { unidade: "ODONTO" },
+  { unidade: "NPJ" },
+  { unidade: "COORDENAÇÃO" },
+  { unidade: "MARKETING" },
+  { unidade: "TI" },
+  { unidade: "FINANCEIRO" },
+  { unidade: "PORTEIRA" },
 ];

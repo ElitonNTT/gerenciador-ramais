@@ -62,7 +62,10 @@ export function ModalLogin() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" className="text:md lg:text-lg">
+        <Button
+          variant="secondary"
+          className="text:md lg:text-lg bg-gray-900 text-white"
+        >
           Entrar
         </Button>
       </DialogTrigger>

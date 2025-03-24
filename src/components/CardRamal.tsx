@@ -18,9 +18,8 @@ import { TCard_Ramal } from "@/types/zod-schema";
 import { z } from "zod";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { Button } from "./ui/button";
-// import { updateCard } from "@/actions/actions";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -32,6 +31,9 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
+import ButtonCreateRamal from "./actions-card/button-create-ramal";
+import ButtonEditRamal from "./actions-card/button-edit-ramal";
+import ButtonDeleteRamal from "./actions-card/button-delete-ramal";
 
 export type TCardRamal = z.infer<typeof TCard_Ramal>;
 
@@ -42,7 +44,6 @@ export default function CardRamal({
   subtitle,
   ramais,
 }: TCardRamal) {
-  const [dataCard, setDataCard] = useState<TCardRamal | null>(null);
   const [isEditable, setIsEditable] = useState<boolean>(false);
   const { data: session } = useSession();
 
@@ -50,30 +51,23 @@ export default function CardRamal({
     resolver: zodResolver(TCard_Ramal),
   });
 
-  const handleUpdate = async (formData: TCardRamal) => {
-    try {
-      setDataCard(formData);
-      console.log(dataCard);
-      // await updateCard(dataCard);
-    } catch (error) {
-      console.error("Error Updating card data:", error);
-    }
-  };
-
   return (
     <Card className="shadow-lg drop-shadow-md break-inside-avoid rounded-md relative">
       {session ? (
         <>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleUpdate)}>
+            <form>
               <CardHeader>
-                <Button
-                  variant={"secondary"}
-                  className="absolute right-0 top-0 m-2 p-0 w-6 h-6 border-0"
-                  onClick={() => setIsEditable(!isEditable)}
-                >
-                  <FaEdit size={22} color="#004e4c" />
-                </Button>
+                <div className="absolute  right-4 top-4 flex justify-end gap-2">
+                  <ButtonCreateRamal cardID={id!} setor={setor} />
+                  <Button
+                    variant={"secondary"}
+                    className="p-0 w-6 h-6 border-0"
+                    onClick={() => setIsEditable(!isEditable)}
+                  >
+                    <FaEdit size={22} color="#004e4c" />
+                  </Button>
+                </div>
                 {!isEditable && <h2>Editar</h2>}
                 <FormField
                   control={form.control}
@@ -83,7 +77,7 @@ export default function CardRamal({
                     <FormItem>
                       <FormLabel>Setor</FormLabel>
                       <FormControl>
-                        <Input {...field} readOnly={isEditable} />
+                        <Input {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -97,7 +91,7 @@ export default function CardRamal({
                     <FormItem>
                       <FormLabel>Subtítulo</FormLabel>
                       <FormControl>
-                        <Input {...field} readOnly={isEditable} />
+                        <Input {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -115,7 +109,7 @@ export default function CardRamal({
                         <FormItem>
                           <FormLabel>Mensagem</FormLabel>
                           <FormControl>
-                            <Input {...field} readOnly={isEditable} />
+                            <Input {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -124,20 +118,25 @@ export default function CardRamal({
                   </TableCaption>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-6/12">Nome</TableHead>
+                      <TableHead className="w-3/12">Nome</TableHead>
                       <TableHead className="w-3/12">Função</TableHead>
                       <TableHead className="w-3/12 text-right">Ramal</TableHead>
+                      <TableHead className="w-3/12 text-right">Ações</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {ramais?.map((item, index: number) => (
-                      <TableRow key={index}>
-                        <TableCell className="w-6/12 font-medium">
-                          {item.nome}
-                        </TableCell>
+                      <TableRow key={index} className="w-full">
+                        <TableCell className="w-3/12">{item.nome}</TableCell>
                         <TableCell className="w-3/12">{item.funcao}</TableCell>
-                        <TableCell className="w-3/12 text-right">
-                          {item.numero}
+                        <TableCell className="w-3/12">{item.numero}</TableCell>
+                        <TableCell className="w-full flex gap-2 justify-end">
+                          <ButtonEditRamal />
+                          <ButtonDeleteRamal
+                            ramalID={item.id!}
+                            numero={item.numero}
+                            setor={setor}
+                          />
                         </TableCell>
                       </TableRow>
                     ))}

@@ -8,17 +8,17 @@ import { Button } from "../ui/button";
 export default function Header() {
   const session = useSession();
   return (
-    <header className="w-full h-[10dvh] bg-unimed-primary">
+    <header className="w-full h-[10dvh] bg-zinc-50">
       <div className="w-[90%] h-full m-auto flex justify-between items-center">
         <Image src={logo} alt="LOGO UNIMED" width={140} />
 
         {session.status === "authenticated" ? (
-          <Button variant={"outline"} onClick={() => signOut()}>
+          <Button variant={"destructive"} onClick={() => signOut()}>
             Sair
           </Button>
         ) : (
           <nav>
-            <ul className="flex gap-20 text-white underline">
+            <ul className="flex gap-20">
               <ModalLogin />
             </ul>
           </nav>

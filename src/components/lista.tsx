@@ -1,13 +1,13 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import CardRamal from "./card-lista";
-import { getCards } from "@/actions/actions";
+import CardRamal from "./CardRamal";
 import { Card } from "./ui/card";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Unidades } from "@/lib/unidades";
+import { GetPublishedCards } from "@/actions/cards/action";
 
 export const revalidate = 30;
 
@@ -16,10 +16,9 @@ export default function Lista() {
   const [selectedUnit, setSelectedUnit] = useState("");
   const { data, status, error } = useQuery({
     queryKey: ["ramais"],
-    queryFn: getCards,
+    queryFn: GetPublishedCards,
   });
 
-  //skeletons
   if (status === "pending") {
     return (
       <div className="min-h-dvh">
@@ -80,7 +79,6 @@ export default function Lista() {
     const matchesUnit = selectedUnit ? item.unidade === selectedUnit : true;
     return matchesFilter && matchesUnit;
   });
-  console.log("Data aqui", filteredData);
 
   return (
     <div className="min-h-dvh">
