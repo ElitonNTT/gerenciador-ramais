@@ -60,7 +60,6 @@ export default function ButtonEditRamal({
   });
 
   function onSubmit(data: TRamal) {
-    console.log("edit aqui:", data);
     mutation.mutate(data);
   }
 

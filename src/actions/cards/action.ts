@@ -36,9 +36,9 @@ export async function CreateCard({ data }: { data: TCreateCard }) {
 
     const created = await prisma.card.create({
       data: {
-        setor: validatedData.unidade,
+        setor: validatedData.setor,
         mensagem: validatedData.mensagem,
-        unidade: "FAMA",
+        unidade: validatedData.setor,
         subtitle: validatedData.subtitle || "Pequeno titulo",
         published: validatedData.published || true,
       },
@@ -70,9 +70,9 @@ export async function UpdateCard({ data }: { data: TUpdateCard }) {
     const updated = await prisma.card.update({
       where: { id: data.id },
       data: {
-        setor: validatedData.unidade,
+        setor: validatedData.setor,
         mensagem: validatedData.mensagem,
-        unidade: "FAMA",
+        unidade: validatedData.setor,
         subtitle: validatedData.subtitle,
         published: validatedData.published,
       },

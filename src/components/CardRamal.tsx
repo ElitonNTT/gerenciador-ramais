@@ -44,6 +44,7 @@ import { Button } from "./ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { UpdateCard } from "@/actions/cards/action";
 import toast from "react-hot-toast";
+import ButtonDeleteCard from "./actions-card/button-delete-card";
 
 export type TCardRamal = z.infer<typeof TCard_Ramal>;
 
@@ -84,7 +85,6 @@ export default function CardRamal({
   });
 
   function onSubmit(values: TCardRamal) {
-    console.log(values);
     mutation.mutate(values);
   }
 
@@ -191,7 +191,7 @@ export default function CardRamal({
                   </TableBody>
                 </Table>
               </CardContent>
-              <CardFooter className="border-t border-gray-200 py-4 text-xs">
+              <CardFooter className="border-t border-gray-200 py-4 text-xs flex flex-col gap-4">
                 <Button
                   variant={"default"}
                   type="submit"
@@ -199,6 +199,7 @@ export default function CardRamal({
                 >
                   Salvar alterações
                 </Button>
+                <ButtonDeleteCard cardID={id!} />
               </CardFooter>
             </form>
           </Form>

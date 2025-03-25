@@ -11,16 +11,24 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FaPlus } from "react-icons/fa";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TCard_Ramal } from "@/types/zod-schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { CreateCard, TCreateCard } from "@/actions/cards/action";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Unidades } from "@/lib/unidades";
 
 export default function ButtonCreateCard() {
-  const { register, handleSubmit } = useForm({
+  const { control, register, handleSubmit } = useForm({
     resolver: zodResolver(TCard_Ramal),
     defaultValues: {
       setor: "",
@@ -47,7 +55,6 @@ export default function ButtonCreateCard() {
   });
 
   function onSubmit(data: TCreateCard) {
-    console.log(data);
     mutation.mutate(data);
   }
 
@@ -71,7 +78,24 @@ export default function ButtonCreateCard() {
             <Label htmlFor="setor" className="text-left">
               Setor
             </Label>
-            <Input {...register("setor")} className="col-span-3" />
+            <Controller
+              control={control}
+              name="setor"
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Selecione um setor" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Unidades.map((item, index) => (
+                      <SelectItem key={index} value={item.unidade}>
+                        {item.unidade}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </div>
           <div className="grid grid-cols-3 items-center gap-4">
             <Label htmlFor="subtitle" className="text-left">
