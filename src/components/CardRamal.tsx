@@ -18,9 +18,6 @@ import { TCard_Ramal } from "@/types/zod-schema";
 import { z } from "zod";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
-import { FaEdit, FaTrash } from "react-icons/fa";
-import { Button } from "./ui/button";
-import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -44,7 +41,6 @@ export default function CardRamal({
   subtitle,
   ramais,
 }: TCardRamal) {
-  const [isEditable, setIsEditable] = useState<boolean>(false);
   const { data: session } = useSession();
 
   const form = useForm<TCardRamal>({
@@ -58,17 +54,12 @@ export default function CardRamal({
           <Form {...form}>
             <form>
               <CardHeader>
-                <div className="absolute  right-4 top-4 flex justify-end gap-2">
+                <div className="w-full flex justify-between gap-2">
+                  <CardTitle className="font-semibold text-lg">
+                    EDITAR
+                  </CardTitle>
                   <ButtonCreateRamal cardID={id!} setor={setor} />
-                  <Button
-                    variant={"secondary"}
-                    className="p-0 w-6 h-6 border-0"
-                    onClick={() => setIsEditable(!isEditable)}
-                  >
-                    <FaEdit size={22} color="#004e4c" />
-                  </Button>
                 </div>
-                {!isEditable && <h2>Editar</h2>}
                 <FormField
                   control={form.control}
                   name="setor"
@@ -120,7 +111,7 @@ export default function CardRamal({
                     <TableRow>
                       <TableHead className="w-3/12">Nome</TableHead>
                       <TableHead className="w-3/12">Função</TableHead>
-                      <TableHead className="w-3/12 text-right">Ramal</TableHead>
+                      <TableHead className="w-3/12">Ramal</TableHead>
                       <TableHead className="w-3/12 text-right">Ações</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -131,7 +122,13 @@ export default function CardRamal({
                         <TableCell className="w-3/12">{item.funcao}</TableCell>
                         <TableCell className="w-3/12">{item.numero}</TableCell>
                         <TableCell className="w-full flex gap-2 justify-end">
-                          <ButtonEditRamal />
+                          <ButtonEditRamal
+                            numero={item.numero}
+                            funcao={item.funcao}
+                            nome={item.nome}
+                            cardID={id}
+                            published={item.published}
+                          />
                           <ButtonDeleteRamal
                             ramalID={item.id!}
                             numero={item.numero}

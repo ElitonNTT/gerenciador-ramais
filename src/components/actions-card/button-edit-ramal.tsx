@@ -11,16 +11,41 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FaEdit } from "react-icons/fa";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { TRamal } from "@/types/zod-schema";
+import { z } from "zod";
 
-// type ButtonEditRamalProps = {
-//   ramalId: number | null;
-//   ramalData: {
-//     name: string;
-//     username: string;
-//   };
-// };
+type TRamal = z.infer<typeof TRamal>;
+type TRamalEdit = {
+  cardID?: number;
+  nome?: string;
+  funcao?: string;
+  numero?: string;
+  published?: boolean;
+  id?: number | undefined;
+};
 
-export default function ButtonEditRamal() {
+export default function ButtonCreateRamal({
+  numero,
+  funcao,
+  nome,
+  cardID,
+}: TRamalEdit) {
+  const {
+    register,
+    handleSubmit,
+    // formState: { errors, isLoading },
+  } = useForm({
+    resolver: zodResolver(TRamal),
+    defaultValues: {
+      nome: nome || "",
+      funcao: funcao || "",
+      numero: numero || "",
+      cardID: cardID || "",
+      plublished: true,
+    },
+  });
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -30,25 +55,34 @@ export default function ButtonEditRamal() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Editar ramal</DialogTitle>
+          <DialogTitle>Editar Ramal</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
+        <form
+          onSubmit={handleSubmit(() => console.log("Enviado"))}
+          className="grid gap-4 py-4"
+        >
+          <div className="grid grid-cols-3 items-center gap-4">
+            <Label htmlFor="nome" className="text-left">
+              Nome
             </Label>
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
+            <Input {...register("nome")} className="col-span-3" />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
+          <div className="grid grid-cols-3 items-center gap-4">
+            <Label htmlFor="numero" className="text-left">
+              Número
             </Label>
-            <Input id="username" value="@peduarte" className="col-span-3" />
+            <Input {...register("numero")} className="col-span-3" />
           </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Salvar</Button>
-        </DialogFooter>
+          <div className="grid grid-cols-3 items-center gap-4">
+            <Label htmlFor="funcao" className="text-left">
+              Função
+            </Label>
+            <Input {...register("funcao")} className="col-span-3" />
+          </div>
+          <DialogFooter>
+            <Button type="submit">Atualizar</Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
