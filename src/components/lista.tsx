@@ -15,7 +15,7 @@ export default function Lista() {
   const [filter, setFilter] = useState("");
   const [selectedUnit, setSelectedUnit] = useState("");
   const { data, status, error } = useQuery({
-    queryKey: ["ramais"],
+    queryKey: ["get-ramais"],
     queryFn: GetPublishedCards,
   });
 
@@ -73,11 +73,11 @@ export default function Lista() {
     );
   }
   const filteredData = data?.filter((item) => {
-    const matchesFilter = item.ramais?.some((ramal) =>
-      ramal.nome?.toLowerCase().includes(filter.toLowerCase())
-    );
+    // const matchesFilter = item.ramais?.some((ramal) =>
+    //   ramal.nome?.toLowerCase().includes(filter.toLowerCase())
+    // );
     const matchesUnit = selectedUnit ? item.unidade === selectedUnit : true;
-    return matchesFilter && matchesUnit;
+    return matchesUnit;
   });
 
   return (

@@ -1,4 +1,5 @@
 "use client";
+import { DeleteRamal } from "@/actions/ramais/action";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,7 +10,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FaTrash } from "react-icons/fa";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 type TButtonModalAction = {
   ramalID: number;
@@ -22,9 +26,23 @@ export default function ButtonDeleteRamal({
   setor,
   numero,
 }: TButtonModalAction) {
-  console.log(ramalID);
+  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+
+  const mutate = useMutation({
+    mutationKey: ["delete-ramal"],
+    mutationFn: () => DeleteRamal(ramalID),
+    onSuccess: () => {
+      toast.success("Ramal deletado com sucesso!");
+      setOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["get-ramais"] });
+    },
+    onError: () => {
+      toast.error(`Erro ao deletar o ramal`);
+    },
+  });
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant={"secondary"} className="p-0 w-6 h-6 border-0">
           <FaTrash size={22} color="#004e4c" />
@@ -41,7 +59,11 @@ export default function ButtonDeleteRamal({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button type="button" variant={"destructive"}>
+          <Button
+            onClick={() => mutate.mutate()}
+            type="button"
+            variant={"destructive"}
+          >
             Deletar
           </Button>
         </DialogFooter>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "./Providers";
 import Header from "../components/Layout/header";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Ramais Unimed Anápolis",
@@ -19,6 +20,7 @@ export default function RootLayout({
         <Providers>
           <Header />
           {children}
+          <Toaster />
         </Providers>
       </body>
     </html>

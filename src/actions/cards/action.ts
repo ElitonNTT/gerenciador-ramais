@@ -2,7 +2,6 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prismaClient";
 import { getServerSession } from "next-auth";
-import { Card } from "@prisma/client";
 import { z } from "zod";
 
 const CardSchema = z.object({
@@ -19,7 +18,14 @@ const RamalSchema = z.object({
   numero: z.string().min(1, "Número é obrigatório"),
 });
 
-export async function CreateCard({ data }: { data: Card }) {
+export type TCreateCard = {
+  setor: string;
+  subtitle: string;
+  mensagem: string;
+  published: boolean;
+  unidade: string;
+};
+export async function CreateCard({ data }: { data: TCreateCard }) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) {
@@ -30,10 +36,10 @@ export async function CreateCard({ data }: { data: Card }) {
 
     const created = await prisma.card.create({
       data: {
-        setor: validatedData.setor,
+        setor: validatedData.unidade,
         mensagem: validatedData.mensagem,
-        unidade: validatedData.unidade || "FAMA",
-        subtitle: validatedData.subtitle || "Pequena descrição",
+        unidade: "FAMA",
+        subtitle: validatedData.subtitle || "Pequeno titulo",
         published: validatedData.published || true,
       },
     });
@@ -43,7 +49,16 @@ export async function CreateCard({ data }: { data: Card }) {
   }
 }
 
-export async function UpdateCard({ data }: { data: Card }) {
+type TUpdateCard = {
+  id?: number;
+  setor: string;
+  subtitle: string;
+  mensagem: string;
+  published: boolean;
+  unidade: string;
+};
+
+export async function UpdateCard({ data }: { data: TUpdateCard }) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) {
@@ -55,9 +70,9 @@ export async function UpdateCard({ data }: { data: Card }) {
     const updated = await prisma.card.update({
       where: { id: data.id },
       data: {
-        setor: validatedData.setor,
+        setor: validatedData.unidade,
         mensagem: validatedData.mensagem,
-        unidade: validatedData.unidade,
+        unidade: "FAMA",
         subtitle: validatedData.subtitle,
         published: validatedData.published,
       },

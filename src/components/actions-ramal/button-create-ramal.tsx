@@ -10,57 +10,66 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FaEdit } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TRamal } from "@/types/zod-schema";
-import { z } from "zod";
+import { TRamalZod } from "@/types/zod-schema";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { CreateRamal, TCreateRamal } from "@/actions/ramais/action";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
-type TRamal = z.infer<typeof TRamal>;
-type TRamalEdit = {
-  cardID?: number;
-  nome?: string;
-  funcao?: string;
-  numero?: string;
-  published?: boolean;
-  id?: number | undefined;
+type TButtonModalAction = {
+  cardID: number;
+  setor: string | "não definido";
 };
 
 export default function ButtonCreateRamal({
-  numero,
-  funcao,
-  nome,
   cardID,
-}: TRamalEdit) {
-  const {
-    register,
-    handleSubmit,
-    // formState: { errors, isLoading },
-  } = useForm({
-    resolver: zodResolver(TRamal),
+  setor,
+}: TButtonModalAction) {
+  const { register, handleSubmit } = useForm({
+    resolver: zodResolver(TRamalZod),
     defaultValues: {
-      nome: nome || "",
-      funcao: funcao || "",
-      numero: numero || "",
-      cardID: cardID || "",
-      plublished: true,
+      nome: "",
+      funcao: "",
+      numero: "",
+      cardID: cardID,
+      published: true,
     },
   });
+  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+
+  const mutation = useMutation({
+    mutationKey: ["create-ramal"],
+    mutationFn: (data: TCreateRamal) => CreateRamal({ data: data }),
+    onSuccess: () => {
+      toast.success("Ramal criado com sucesso!");
+      queryClient.invalidateQueries({ queryKey: ["get-ramais"] });
+      setOpen(false);
+    },
+    onError: () => {
+      toast.error(`Erro ao tentar criar o ramal`);
+    },
+  });
+
+  function onSubmit(data: TCreateRamal) {
+    mutation.mutate(data);
+  }
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant={"secondary"} className="p-0 w-6 h-6 border-0">
-          <FaEdit size={22} color="#004e4c" />
+          <FaPlus size={22} color="#004e4c" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Editar Ramal</DialogTitle>
+          <DialogTitle>Criar novo ramal ({setor})</DialogTitle>
         </DialogHeader>
-        <form
-          onSubmit={handleSubmit(() => console.log("Enviado"))}
-          className="grid gap-4 py-4"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
           <div className="grid grid-cols-3 items-center gap-4">
             <Label htmlFor="nome" className="text-left">
               Nome
@@ -80,7 +89,7 @@ export default function ButtonCreateRamal({
             <Input {...register("funcao")} className="col-span-3" />
           </div>
           <DialogFooter>
-            <Button type="submit">Atualizar</Button>
+            <Button type="submit">Salvar</Button>
           </DialogFooter>
         </form>
       </DialogContent>

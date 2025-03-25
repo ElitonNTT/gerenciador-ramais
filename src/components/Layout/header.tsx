@@ -4,6 +4,7 @@ import logo from "@/app/assets/logo.png";
 import { ModalLogin } from "./modal-login";
 import { signOut, useSession } from "next-auth/react";
 import { Button } from "../ui/button";
+import ButtonCreateCard from "../actions-card/button-create-card";
 
 export default function Header() {
   const session = useSession();
@@ -13,9 +14,18 @@ export default function Header() {
         <Image src={logo} alt="LOGO UNIMED" width={140} />
 
         {session.status === "authenticated" ? (
-          <Button variant={"destructive"} onClick={() => signOut()}>
-            Sair
-          </Button>
+          <nav>
+            <ul className="flex gap-4">
+              <li>
+                <ButtonCreateCard />
+              </li>
+              <li>
+                <Button variant={"destructive"} onClick={() => signOut()}>
+                  Sair
+                </Button>
+              </li>
+            </ul>
+          </nav>
         ) : (
           <nav>
             <ul className="flex gap-20">
