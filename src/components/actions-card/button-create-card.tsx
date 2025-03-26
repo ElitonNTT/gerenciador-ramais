@@ -66,7 +66,7 @@ export default function ButtonCreateCard() {
           className="p-2 flex gap-2 border-0 bg-gray-900 text-white hover:bg-gray-700"
         >
           Cartão
-          <FaPlus size={22} color="white" />
+          <FaPlus size={12} color="white" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

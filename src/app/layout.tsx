@@ -5,8 +5,8 @@ import Header from "../components/Layout/header";
 import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
-  title: "Ramais Unimed Anápolis",
-  description: "Lista de ramais internos | Unimed Anápolis",
+  title: "Ramais UniFAMA",
+  description: "Lista de ramais internos | UniFAMA",
 };
 
 export default function RootLayout({

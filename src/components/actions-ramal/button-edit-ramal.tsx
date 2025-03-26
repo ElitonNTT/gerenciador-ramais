@@ -51,8 +51,8 @@ export default function ButtonEditRamal({
     mutationFn: (data: TRamal) => UpdateRamal({ data: data }),
     onSuccess: () => {
       toast.success("Ramal atualizado com sucesso!");
-      queryClient.invalidateQueries({ queryKey: ["get-ramais"] });
       setOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["get-ramais"] });
     },
     onError: () => {
       toast.error(`Erro ao tentar atualizar o ramal`);

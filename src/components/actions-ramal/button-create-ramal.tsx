@@ -46,8 +46,8 @@ export default function ButtonCreateRamal({
     mutationFn: (data: TCreateRamal) => CreateRamal({ data: data }),
     onSuccess: () => {
       toast.success("Ramal criado com sucesso!");
-      queryClient.invalidateQueries({ queryKey: ["get-ramais"] });
       setOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["get-ramais"] });
     },
     onError: () => {
       toast.error(`Erro ao tentar criar o ramal`);
